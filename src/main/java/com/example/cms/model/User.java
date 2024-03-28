@@ -39,6 +39,14 @@ public class User {
 	private String userName;
 	private String email; 
 	private String password;
+	private boolean deleted;
+	public boolean isDeleted() {
+		return deleted;
+	}
+	public User setDeleted(boolean deleted) {
+		this.deleted = deleted;
+		return this;
+	}
 	@CreatedDate
 	@Column(updatable = false)
 	private String createdAt;

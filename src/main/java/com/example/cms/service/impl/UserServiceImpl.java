@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.cms.dao.UserRequest;
 import com.example.cms.dto.UserRespose;
 import com.example.cms.exception.UserAlreadyExistByEmailException;
+import com.example.cms.exception.UserNotFoundByIdException;
 import com.example.cms.model.User;
 import com.example.cms.repository.UserRepository;
 import com.example.cms.service.UserService;
@@ -52,7 +53,28 @@ public class UserServiceImpl implements UserService{
 		return userResponse;
 	}
 
-	
+	@Override
+	public ResponseEntity<ResponseStructure<UserRespose>> findUserByUserId(int userId) {
+		return userRepository.findById(userId).map(user -> {
+			if(!user.isDeleted())
+				return ResponseEntity.ok(userStructure.setMessage("Found Sucess").setStatusCode(HttpStatus.OK.value()).setData(mapToUserResponse(user, new UserRespose())));
+			
+			throw new UserNotFoundByIdException("User Id Already Deleted");
+		}
+			
+				).orElseThrow( ()-> new UserNotFoundByIdException("User Not Found By Id"));
+		
+		
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<UserRespose>> softDeleteUserByUserId(int userId) {
+		return userRepository.findById(userId).map(user -> {
+			return ResponseEntity.ok(userStructure.setMessage("User Data Sucessfully"
+					+ "").setStatusCode(HttpStatus.OK.value()).setData(mapToUserResponse(userRepository.save(user.setDeleted(true)), new UserRespose())));
+			
+		}).orElseThrow( () -> new UserNotFoundByIdException("User Not Found By Id"));
+	}	
 	
 
 }

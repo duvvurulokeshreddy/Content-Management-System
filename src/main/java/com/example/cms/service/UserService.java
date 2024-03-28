@@ -10,6 +10,10 @@ import com.example.cms.utility.ResponseStructure;
 public interface UserService {
 
 	ResponseEntity<ResponseStructure<UserRespose>> saveUser(UserRequest user);
+
+	ResponseEntity<ResponseStructure<UserRespose>> findUserByUserId(int userId);
+
+	ResponseEntity<ResponseStructure<UserRespose>> softDeleteUserByUserId(int userId);
 	
 	
 	
