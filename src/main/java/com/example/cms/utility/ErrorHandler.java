@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.example.cms.exception.TopicsNotSpecifiedException;
 import com.example.cms.exception.UserAlreadyExistByEmailException;
 
 @RestControllerAdvice
@@ -25,5 +26,13 @@ public class ErrorHandler {
 	{
 		return new ResponseEntity<ErrorStructure<String>>(errorStrucutre.setMessage("Registration Not Success").setStatusCode(HttpStatus.BAD_REQUEST.value()).setData(ex.getMessage()),HttpStatus.BAD_REQUEST);
 		
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleTopicsNotSpecified(TopicsNotSpecifiedException ex)
+	{
+		return new ResponseEntity<ErrorStructure<String>>(new ErrorStructure<String>()
+				.setMessage("Failed").setStatusCode(HttpStatus.NOT_FOUND.value())
+				.setData(ex.getMessage()),HttpStatus.NOT_FOUND);
 	}
 }
